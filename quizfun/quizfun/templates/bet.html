@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block javascript %}
+<script>
+  $("input[name='option-sel']").change(function(){
+    console.log($(this).val());
+    $('input:not(:checked)').siblings().removeClass("option-selected");
+    $('input:checked').siblings().addClass("option-selected");
+    $("input[name='selected']").val($(this).val())
+    $("input[name='res']").val($(this).siblings('label').attr('value'))
+  });
+
+  $('button').on('click',function(event){
+        if ($('input:checked').val()===undefined){
+            return false
+        }
+        else {
+            return true
+        }
+    });
+
+</script>
+{% endblock %}
+{% block content %}
+
+<div class="container">
+  <h1> Prediction: {{prediction.description}}</h1>
+  <hr>
+    <table class="table table-striped">
+      <thead>
+        <tr class="info">
+          <th>Options</th>
+          <th>Probability</th>
+        </tr>
+      </thead>
+      <tbody>
+        {%for p in p_options_list %}
+          <tr class="warning">
+            <td><input type="radio" name="option-sel" id="option-sel{{ forloop.counter }}" value="{{ p.id }}" style="display: none"><label class="option" for="option-sel{{ forloop.counter }}" value="{{p.description}}">{{p.description}}</label></td>
+            <td>{{p.probability}}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  <form action='/save_bet' method="POST" id="pred-form">
+    {% csrf_token %}
+      <input type="text" name="selected" readonly style="display: none">
+      <input type="text" name="res" readonly>
+      <input type="number" name="bet" value='1' min="1" max="{{user.userprofile.coins}}">
+      <br>
+    <button type="submit">Select</button>
+  </form>
+  <a href="/prediction/">Back</a>
+</div>
+{% endblock %}

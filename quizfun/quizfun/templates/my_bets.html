@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<body>
+
+<div class="container">
+  <h2>My bets</h2>
+  <table class="table table-striped">
+    <thead>
+      <tr class="info">
+        <th>Prediction</th>
+        <th>Option Selected</th>
+        <th>Amount bet</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if my_bets %}
+     {%for n in my_bets %}
+     <tr class="warning">
+       <td>{{n.optionbet.prediction}}</td>
+       <td>{{n.optionbet}}</td>
+       <td>{{n.amount_bet}}</td>
+    </tr>
+    {% endfor %}
+  {% else %}
+    <tr class="warning">
+      <td>You don't have bets yet.</td>
+      <td></td>
+      <td></td>
+  </tr>
+    {% endif %}
+    </tbody>
+  </table>
+</div>
+</body>
+</html>
+
+{% endblock %}

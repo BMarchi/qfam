@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% block content %}
+
+{% if messages %}
+<div class="alert alert-info" role="alert">
+	<ul class="messages">
+	    {% for message in messages %}
+	    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+	    {% endfor %}
+	</ul>
+</div>
+{% endif %}
+<br>
+<br>
+<div class="container">
+  <h1 class="row skew-title">
+    <span>W</span><span>E</span><span>L</span><span>C</span><span>O</span><span>M</span><span class="last">E</span>
+    &nbsp;
+    <span>T</span><span class="last">O</span>
+    &nbsp;
+    <span class="alt">Q</span><span class="alt">U</span><span class="alt">I</span><span class="alt">Z</span><span class="alt">F</span><span class="alt">U</span><span class="alt last">N</span>
+  </h1>
+</div>
+<br>
+
+<div class="container">
+	{% if user.is_authenticated %}
+		<div class="modes">
+			{% if not user.is_superuser %}
+				<div class="mode" onclick="window.location.href='/get_question'">
+					<img src="media/useravatars/quiz.png"><!-- image quiz -->
+					<div class="overlay">
+						<div class="proximamente">Question mode</div>
+					</div>
+				</div>
+				<div class="mode" onclick="window.location.href='/prediction'">
+					<img src="media/useravatars/pred.png"><!-- image prediction-->
+					<div class="overlay">
+						<div class="proximamente">Prediction mode<br/><br/>Coming soon!</div>
+					</div>
+				</div>
+				<hr>
+				<div class="row">
+					<div class="col-sm-6"><span class='containerg pulse-button1' onclick="window.location.href='/ranking'">Global Ranking</span></div>
+					<div class="col-sm-5">	<span class='containerg pulse-button2' onclick="window.location.href='/monthly_ranking'">Monthly Ranking</span></div>
+					</div>
+			{% endif%}
+		</div>
+	{% else %}
+	{% endif %}
+</div>
+
+<style>
+.containerg {
+width: 200px;
+height: 100%;
+-webkit-perspective: 1000;
+-webkit-backface-visibility: hidden;
+}
+
+.pulse-button1 {
+	display: inline-block;
+	width: 200px;
+	height: 100px;
+	font-size: 1.3em;
+	font-weight: light;
+	font-family: 'Trebuchet MS', sans-serif;
+	text-transform: uppercase;
+	text-align: center;
+	line-height: 100px;
+	letter-spacing: -1px;
+	color: white;
+	border: none;
+	border-radius: 10%;
+	background: #003471;
+	cursor: pointer;
+	box-shadow: 0 0 0 0 rgba(90, 153, 212, 0.5);
+	-webkit-animation: pulse 1.5s infinite;
+}
+.pulse-button2 {
+	display: inline-block;
+	width: 200px;
+	height: 100px;
+	font-size: 1.3em;
+	font-weight: light;
+	font-family: 'Trebuchet MS', sans-serif;
+	text-transform: uppercase;
+	text-align: center;
+	line-height: 100px;
+	letter-spacing: -1px;
+	color: white;
+	border: none;
+	border-radius: 10%;
+	background: #EE2323;
+	cursor: pointer;
+	box-shadow: 0 0 0 0 rgba(90, 153, 212, 0.5);
+}
+
+</style>
+
+{% endblock %}
+
+{% block javascript%}
+
+<script>
+(function() {
+  $('.skew-title').children('span').hover((function() {
+    var $el, n;
+    $el = $(this);
+    n = $el.index() + 1;
+    $el.addClass('flat');
+    if (n % 2 === 0) {
+      return $el.prev().addClass('flat');
+    } else {
+      if (!$el.hasClass('last')) {
+        return $el.next().addClass('flat');
+      }
+    }
+  }), function() {
+    return $('.flat').removeClass('flat');
+  });
+}).call(this);
+</script>
+
+{% endblock %}

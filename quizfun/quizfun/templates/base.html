@@ -1,0 +1,82 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Quiz Fun</title>
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<!-- jQuery library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<!-- Latest compiled JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<!-- Ubicacion CSS -->
+	<link rel="stylesheet" href="{% static 'css/quizfun.css' %}">
+</head>
+<body>
+	<nav class="navbar navbar-inverse navbar-fixed-to">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="{% url 'index'%}">Quiz Fun</a>
+			</div>
+			<ul class="nav navbar-nav navbar-right">
+					{% if user.is_authenticated %}
+						{% if user.is_superuser %}
+							<li><a href="admin/">Admin site</a></li>
+							<li><a href="#" data-toggle="modal" data-target="#logoutModal"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+						{% else %}
+					    	<p class="navbar-text">Coins: {{user.userprofile.coins}}</p>
+					    	<li><a href="{% url 'list_notification'%}"><span class="glyphicon glyphicon-bell"></span> Notification ({{ user.userprofile.amount_notifications }})</a></li>
+							<li class="dropdown">
+								<a class="navbar-left dropdown-toggle" data-toggle="dropdown" href="#">
+							    {% if user.userprofile.avatar == "" %}
+							    	<img src="media/useravatars/default.jpg" height="20px"> {{user}} <span class="caret"></span>
+						    	{% else %}
+						    		<img src={{ user.userprofile.avatar.url }} height="20px"> {{user}} <span class="caret"></span>
+						    	{% endif %}
+								</a>
+								<ul class="dropdown-menu">
+						    		<li><a href="{% url 'profile_user'%}"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
+										<li><a href='/ranking'><span class="glyphicon glyphicon-globe"></span> Global Ranking</a></li>
+										<li><a href='/monthly_ranking'><span class="glyphicon glyphicon-circle-arrow-up"></span> Monthly Ranking</a></li>
+						        <li><a href="#" data-toggle="modal" data-target="#logoutModal"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+								</ul>
+						     </li>
+			    		{% endif %}
+							<!-- Cuadro de dialogo de cerrar sesion -->
+							<div class="modal" id="logoutModal" tabindex="-1" role="dialog" aria-hidden="true">
+							  <div class="modal-dialog modal-sm">
+							    <div class="modal-content">
+							      <div class="modal-header">
+							        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+							        <h4> Log out <i class="fa fa-lock"></i></h4>
+							      </div>
+							      <div class="modal-body">
+							        <p><i class="fa fa-question-circle"></i> ¿Are you sure to logout? <br/><br></p>
+							        <div class="actionsBtns">
+							            <form action="/logout" method="post">
+							                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+												<a href="{% url 'logout'%}" class="btn btn-primary" role="button">Logout</a>
+								                <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+							            </form>
+							        </div>
+							      </div>
+							    </div>
+							  </div>
+							</div>
+			    	{% else %}
+			    	<li><a href="{% url 'register_user'%}"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+					<li><a href="{% url 'login'%}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+			    {% endif %}
+		    </ul>
+		</div>
+	</nav>
+
+
+		{% block content %}
+		{% endblock %}
+
+	    <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+	    <script src="{% static 'js/app.js' %}"></script>
+    	{% block javascript %}{% endblock %}
+	</body>
+</html>

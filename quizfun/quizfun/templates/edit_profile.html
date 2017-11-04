@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+	<div class="login-page">
+    {% if form.errors %}
+        {% for field in form %}
+            {% for error in field.errors %}
+                <div class="alert alert-danger">
+                    <strong>{{ error|escape }}</strong>
+                </div>
+            {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endif %}
+		<div class="form">
+			<h1>Edit Profile</h1>
+    		<form class="login-form" action="/edit_profile" method="post" enctype='multipart/form-data'>
+			    {% csrf_token %}
+			    {{ form.as_p }}
+    			<button type="submit" class="save btn btn-default">Apply Changes</button>
+    		</form>
+		</div>
+	</div>
+</div>
+{% endblock %}

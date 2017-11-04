@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container">
+  <h1>Available Predictions:</h1>
+  <hr>
+  <table class="table table-striped">
+    <thead>
+      <tr class="info">
+        <th>Prediction</th>
+        <th>Category</th>
+        <th>Start date</th>
+        <th>Deadline</th>
+        <th>Finish Date</th>
+        <th>Bet</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      {%for p in predictions %}
+
+      <tr class="warning">
+        <td>{{p.description}}</td>
+        <td>{{p.category}}</td>
+        <td>{{p.date_started}}</td>
+        <td>{{p.finish_bet_date}}</td>
+        <td>{{p.finish_pred}}</td>
+        <td> <a href="/bet/{{p.id}}">Bet</a> </td>
+      </tr>
+
+
+      {% endfor %}
+    </tbody>
+  </table>
+  <a onclick="window.location.href='/my_bets'" class="btn btn-default" role="button">My Bets</a>
+</div>
+
+
+{% endblock %}
+{% block javascript %}
+<script>
+(function ($) {
+    $(function () {
+        $('.table-expandable').each(function () {
+            var table = $(this);
+            table.children('thead').children('tr').append('<th></th>');
+            table.children('tbody').children('tr').filter(':odd').hide();
+            table.children('tbody').children('tr').filter(':even').click(function () {
+                var element = $(this);
+                element.next('tr').toggle('slow');
+                element.find(".table-expandable-arrow").toggleClass("up");
+            });
+            table.children('tbody').children('tr').filter(':even').each(function () {
+                var element = $(this);
+                element.append('<td><div class="table-expandable-arrow"></div></td>');
+            });
+        });
+    });
+})(jQuery);
+
+</script>
+
+{% endblock %}

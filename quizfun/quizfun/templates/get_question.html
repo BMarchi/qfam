@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block javascript%}
+<script>
+
+    $(window).ready(function() {
+        resetForm();
+        setTimeout(countdown,1000);
+    });
+
+    $('button').on('click',function(event){
+        if ($('input:checked').val()===undefined){
+            return false
+        }
+        else {
+            return true
+        }
+    });
+    
+    $('input[name="answer"]').change(function() {
+        $('input:not(:checked)').siblings().removeClass("selected");
+        $('input:checked').siblings().addClass("selected");
+    });
+
+    $('#question-form').on('submit', function (event) {
+        event.preventDefault();
+        var input = $("input")
+        var del = $(this)
+        var checked = $('input:checked')
+            $.ajax({
+                url: $(this).attr('action'),
+                type: $(this).attr('method'),
+                data: $(this).serialize(),
+                dataType: 'json',
+                success: function (data) {
+                    if (data.vacio) {
+                        return;
+                    }
+                    clearInterval(timeoutMyOswego);
+                    del.children('.box').remove();
+                    input.prop('disabled', true);
+                    if (data.resp) {
+                        $('.resp').append('<p class="right">Thas\'s right!<br/>You win {{pregunta.reward_coins}} coins</p>');
+                        checked.siblings().removeClass("selected")
+                        checked.siblings().toggleClass("right")
+                    }
+                    else {
+                        $('.resp').append('<p class="wrong">Wrong! :(<br/>You lose {{ pregunta.loss_coins }} coins</p>');
+                        checked.siblings().removeClass("selected")
+                        checked.siblings().toggleClass("wrong")
+                    }
+                    setTimeout(function(){
+                    $('.select').append('<button class="box next" onclick="location.reload()">Next Question</button>');
+                    $('.select').append('<button class="box exit" onclick="goIndex()">Exit question mode</button>');
+                    },1000);
+                }
+            });
+    });
+    function noTime() {
+        $('input:checked').siblings().removeClass("selected");
+        resetForm();
+        $('#question-form').submit();
+        $("input").prop('disabled', true);
+        $("#question-form").children('.box').remove();
+        $("#question-form").children('input[name="answer"]').remove();
+        $('.resp').append('<p class="wrong">Time Out!<br/>You lose {{ pregunta.loss_coins }} coins</p>');
+        setTimeout(function() {
+        $('.select').append('<button class="box next" onclick="location.reload();resetForm()">Next Question</button>')
+        $('.select').append('<button class="box exit" onclick="goIndex()">Exit question mode</button>');
+        },1000);
+    }
+
+
+</script>
+
+{% endblock %}
+
+{% block content %}
+
+
+<div class="container">
+    <div class="quiz-container">
+        <div class="question box">
+            <h3><div id="countdown">{{ time_left }}</div></h3>
+            <h1>{{ pregunta.description }}</h1>
+            <p>Difficulty: {{ pregunta.difficulty }}</p>
+            <p>Category: {{ pregunta.category }}</p><br/>
+            <p class="coins">Reward Coins: {{ pregunta.reward_coins }}</p>
+            <p class="coins">Loss Coins: {{ pregunta.loss_coins }}</p>
+        </div>
+        <form action="/check_answer" method="POST" id="question-form">
+            {% csrf_token %}
+            {% for answer in pregunta.answer_set.all %}
+                <ul class="answers">
+                    <li class="answer">
+                        <input type="radio" name="answer" id="answer{{ forloop.counter }}" value="{{ answer.id }}" style="display: none">
+                        <label class="la" for="answer{{ forloop.counter }}">
+                            <p><span>{{ forloop.counter }}</span>{{ answer.description }}</p>
+                        </label><br>
+                    </li>
+                </ul>
+            {% endfor %}
+            <button class="box" name="btnsubmit">Selection</button>
+            <div class="resp"></div>
+        </form>
+        <div class="select"></div>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block content %}
+
+	{% if user.is_authenticated %}
+		<aside class="profile-card">
+			<header>
+			    {% if user.userprofile.avatar == "" %}
+			    <a target="_blank">
+			      <img src="media/useravatars/default.jpg" class="hoverZoomLink">
+			    </a>	
+			    {% else %}
+			    <a target="_blank">
+			      <img src={{ user.userprofile.avatar.url }} class="hoverZoomLink">
+			    </a>
+			    {% endif %}
+				<h1>{{ user }}</h1>
+				<h2>Coins: {{ coins }}</h2>
+			</header>
+			<div class="profile-bio">
+				<p>First Name: {{ first_name }}</p>
+			    <p>Last Name: {{ last_name }}</p>
+		        <p>Hobbies: {{ hobbies }}</p>
+			 	<p>Favorite Categories: {{ fav_categories }}</p>
+			 	<p>Predictions Right: {{ pred_right }}</p>
+			 	<p>Predictions Wrong: {{ pred_lost }}</p>
+			 	<p>E-mail: {{ email }}</p>
+			 	<p>Birthday: {{ bday }}</p>
+				<div class="button-profile">
+					<form action="change_password">
+					  	<button type="submit" class="btn btn-danger">Change password</button>
+					</form>
+				</div>
+				<div class="button-profile">
+			  	    <form action="edit_profile">
+			    	    <button type="submit" class="btn btn-primary">Edit Profile</button>
+			  	    </form>
+			  	</div>
+			</div>
+		</aside>
+	{% else %}
+		<aside class="profile-card">
+			<header>
+				<br>
+				<h1> Sign Up</h1>
+			</header>
+			<div class="profile-bio">
+				<p>You need to log in to see your profile.</p>
+				<a href="{% url 'index'%}">Volver a inicio</a><br>
+			</div>
+		</aside>
+	{% endif %}
+{% endblock %}

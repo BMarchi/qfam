@@ -1,0 +1,59 @@
+
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container">
+    <h1>User Notifications</h1>
+    <br>
+    <h4> Not Viewed </h4>
+    <table class="table table-striped">
+        <thead>
+            <tr class="info">
+                <th> <p>Description</p> </th>
+                <th> <p>Date</p> </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if no_vistos %}
+                {%for n in no_vistos %}
+                    <tr class="warning">
+                        <td>{{n.description}}</td>
+                        <td>{{n.time}}</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr class="warning">
+                    <td>No new messages</td>
+                    <td></td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+    <hr>
+    <h4> Viewed </h4>
+    <table class="table table-striped">
+        <thead>
+            <tr class="info">
+                <th> <p>Description</p> </th>
+                <th> <p>Date</p> </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if vistos %}
+                {%for n in vistos %}
+                    <tr class="warning">
+                        <td>{{n.description}}</td>
+                        <td>{{n.time}}</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr class="warning">
+                    <td>No messages</td>
+                    <td></td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
